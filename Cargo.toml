@@ -1,0 +1,13 @@
+[package]
+name = "hyprctl-custom"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.3", features = ["derive"] }
+hyprland = "0.3"
+
+[profile.release]
+strip = "debuginfo"
+lto = true
+codegen-units = 1
