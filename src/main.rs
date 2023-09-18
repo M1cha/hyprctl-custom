@@ -34,8 +34,8 @@ fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
     };
 
     match command.command {
-        CursorZoomCommands::In => cursor_zoom_factor += 0.1,
-        CursorZoomCommands::Out => cursor_zoom_factor -= 0.1,
+        CursorZoomCommands::In => cursor_zoom_factor += 0.1 * cursor_zoom_factor,
+        CursorZoomCommands::Out => cursor_zoom_factor -= 0.1 * cursor_zoom_factor,
         CursorZoomCommands::Reset => cursor_zoom_factor = 1.0,
     }
 
