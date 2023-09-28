@@ -1,5 +1,6 @@
 use clap::Parser as _;
 use hyprland::keyword::*;
+use hyprland::shared::*;
 
 #[derive(clap::Parser)]
 #[command(author, version, about, long_about = None)]
@@ -12,6 +13,7 @@ struct Cli {
 #[derive(clap::Subcommand)]
 enum Commands {
     CursorZoom(CursorZoomCommand),
+    MoveCurrentWorkspaceToMonitor(MoveCurrentWorkspaceToMonitorCommand),
 }
 
 #[derive(clap::Args)]
@@ -25,6 +27,11 @@ enum CursorZoomCommands {
     In,
     Out,
     Reset,
+}
+
+#[derive(clap::Args)]
+struct MoveCurrentWorkspaceToMonitorCommand {
+    id: u8,
 }
 
 fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
@@ -51,10 +58,26 @@ fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
     Ok(())
 }
 
+fn move_current_workspace_to_monitor(
+    command: MoveCurrentWorkspaceToMonitorCommand,
+) -> hyprland::Result<()> {
+    let current_workspace = hyprland::data::Workspace::get_active()?;
+
+    hyprland::dispatch::Dispatch::call(hyprland::dispatch::DispatchType::MoveWorkspaceToMonitor(
+        hyprland::dispatch::WorkspaceIdentifier::Id(current_workspace.id),
+        hyprland::dispatch::MonitorIdentifier::Id(command.id),
+    ))?;
+
+    Ok(())
+}
+
 fn main() -> hyprland::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
         Commands::CursorZoom(command) => cursor_zoom(command),
+        Commands::MoveCurrentWorkspaceToMonitor(command) => {
+            move_current_workspace_to_monitor(command)
+        }
     }
 }
