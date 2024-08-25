@@ -31,7 +31,7 @@ enum CursorZoomCommands {
 
 #[derive(clap::Args)]
 struct MoveCurrentWorkspaceToMonitorCommand {
-    id: u8,
+    id: i128,
 }
 
 fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {

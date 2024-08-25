@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.3", features = ["derive"] }
-hyprland = "0.3"
+hyprland = "0.4.0-alpha.2"
 
 [profile.release]
 strip = "debuginfo"
