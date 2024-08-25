@@ -39,7 +39,7 @@ struct MoveCurrentWorkspaceToMonitorCommand {
 struct MoveCursorToCenterCommand {}
 
 fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
-    let mut cursor_zoom_factor = match Keyword::get("misc:cursor_zoom_factor")?.value {
+    let mut cursor_zoom_factor = match Keyword::get("cursor:zoom_factor")?.value {
         OptionValue::Float(i) => i,
         _ => panic!("border size can only be a int"),
     };
@@ -57,7 +57,7 @@ fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
 
     println!("new zoom factor: {cursor_zoom_factor}");
 
-    Keyword::set("misc:cursor_zoom_factor", cursor_zoom_factor)?;
+    Keyword::set("cursor:zoom_factor", cursor_zoom_factor)?;
 
     Ok(())
 }
