@@ -14,6 +14,7 @@ struct Cli {
 enum Commands {
     CursorZoom(CursorZoomCommand),
     MoveCurrentWorkspaceToMonitor(MoveCurrentWorkspaceToMonitorCommand),
+    MoveCursorToCenter(MoveCursorToCenterCommand),
 }
 
 #[derive(clap::Args)]
@@ -33,6 +34,9 @@ enum CursorZoomCommands {
 struct MoveCurrentWorkspaceToMonitorCommand {
     id: i128,
 }
+
+#[derive(clap::Args)]
+struct MoveCursorToCenterCommand {}
 
 fn cursor_zoom(command: CursorZoomCommand) -> hyprland::Result<()> {
     let mut cursor_zoom_factor = match Keyword::get("misc:cursor_zoom_factor")?.value {
@@ -71,6 +75,22 @@ fn move_current_workspace_to_monitor(
     Ok(())
 }
 
+fn move_cursor_to_center(_command: MoveCursorToCenterCommand) -> hyprland::Result<()> {
+    let current_monitor = hyprland::data::Monitor::get_active()?;
+
+    let x: i64 = current_monitor.x.into();
+    let y: i64 = current_monitor.y.into();
+    let width: i64 = (current_monitor.width as f32 / current_monitor.scale) as i64;
+    let height: i64 = (current_monitor.height as f32 / current_monitor.scale) as i64;
+    eprintln!("{} {}", x + width / 2, y + height / 2);
+    hyprland::dispatch::Dispatch::call(hyprland::dispatch::DispatchType::MoveCursor(
+        x + width / 2,
+        y + height / 2,
+    ))?;
+
+    Ok(())
+}
+
 fn main() -> hyprland::Result<()> {
     let cli = Cli::parse();
 
@@ -79,5 +99,6 @@ fn main() -> hyprland::Result<()> {
         Commands::MoveCurrentWorkspaceToMonitor(command) => {
             move_current_workspace_to_monitor(command)
         }
+        Commands::MoveCursorToCenter(command) => move_cursor_to_center(command),
     }
 }
