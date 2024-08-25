@@ -24,7 +24,7 @@ jobs:
     - name: Install rust toolchain
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: 1.71.1
+        toolchain: 1.80.1
         targets: ${{ matrix.target }}
 
     - name: Build
